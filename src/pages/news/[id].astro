@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+// ビルドのときに「どの id のページを作るか」を Astro に教える
+export async function getStaticPaths() {
+  const news = await getCollection("news");
+  return news.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry); // Markdown を HTML にする
+---
+
+<BaseLayout title={entry.data.title} description={entry.data.description}>
+  <article>
+    <time datetime={entry.data.date.toISOString()} class="text-sm text-gray-500">
+      {entry.data.date.toLocaleDateString("ja-JP")}
+    </time>
+    <h1 class="text-2xl font-bold">{entry.data.title}</h1>
+    <div class="mt-4 space-y-4 [&_ul]:list-disc [&_ul]:pl-6">
+      <Content />
+    </div>
+  </article>
+  <p class="mt-8"><a href="/news/" class="text-green-800 hover:underline">お知らせの一覧にもどる</a></p>
+</BaseLayout>

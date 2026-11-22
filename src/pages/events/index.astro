@@ -1,0 +1,18 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { events } from "../../data/events";
+---
+
+<BaseLayout title="企画の一覧" description="みどり祭 2026 の企画の一覧です。">
+  <h1 class="text-2xl font-bold">企画の一覧</h1>
+  <ul class="mt-4 grid gap-4 sm:grid-cols-2">
+    {events.map((event) => (
+      <li class="rounded-lg border border-gray-200 p-4">
+        <h2 class="font-bold">
+          <a href={`/events/${event.id}/`} class="text-green-800 hover:underline">{event.name}</a>
+        </h2>
+        <p class="text-sm text-gray-600">{event.group} ／ {event.place}</p>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

@@ -1,0 +1,14 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import NewsList from "../../components/NewsList.astro";
+
+const news = (await getCollection("news")).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<BaseLayout title="お知らせ" description="みどり祭 2026 のお知らせの一覧です。">
+  <h1 class="text-2xl font-bold">お知らせ</h1>
+  <NewsList items={news} />
+</BaseLayout>

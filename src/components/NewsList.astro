@@ -1,0 +1,19 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+type Props = { items: CollectionEntry<"news">[] };
+const { items } = Astro.props;
+---
+
+<ul class="divide-y divide-gray-200">
+  {items.map((item) => (
+    <li class="py-3">
+      <time datetime={item.data.date.toISOString()} class="text-sm text-gray-500">
+        {item.data.date.toLocaleDateString("ja-JP")}
+      </time>
+      <a href={`/news/${item.id}/`} class="block font-medium text-green-800 hover:underline">
+        {item.data.title}
+      </a>
+    </li>
+  ))}
+</ul>

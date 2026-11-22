@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import NewsList from "../components/NewsList.astro";
+import { SITE } from "../data/site";
+import hero from "../assets/hero.jpg";
+
+// 新しい順に3件
+const news = (await getCollection("news"))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 3);
+
+// 構造化データ（JSON-LD）: 「これはイベントです」と検索エンジンに伝える
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Event",
+  name: SITE.name,
+  description: SITE.description,
+  startDate: SITE.startDate,
+  endDate: SITE.endDate,
+  eventStatus: "https://schema.org/EventScheduled",
+  eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
+  location: {
+    "@type": "Place",
+    name: SITE.place,
+    address: SITE.address,
+  },
+  image: [new URL("/ogp.png", Astro.site).href],
+  organizer: { "@type": "Organization", name: "みどり祭 運営" },
+};
+---
+
+<BaseLayout>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+
+  <Image src={hero} alt="みどり祭 2026" width={800} class="w-full rounded-lg" loading="eager" />
+
+  <h1 class="mt-6 text-3xl font-bold">{SITE.name}</h1>
+  <p class="mt-2">11月28日（土）・29日（日） 10:00〜15:00 ／ {SITE.place}</p>
+  <p class="mt-4">{SITE.description}</p>
+
+  <h2 class="mt-8 text-xl font-bold">お知らせ</h2>
+  <NewsList items={news} />
+  <p class="mt-2 text-right"><a href="/news/" class="text-green-800 hover:underline">お知らせをすべて見る</a></p>
+
+  <h2 class="mt-8 text-xl font-bold">企画</h2>
+  <p class="mt-2">お化け屋敷、演劇、ライブ、模擬店など。<a href="/events/" class="text-green-800 underline">企画の一覧</a>から探せます。</p>
+</BaseLayout>

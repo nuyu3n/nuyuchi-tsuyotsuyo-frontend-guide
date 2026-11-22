@@ -1,0 +1,13 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { SITE } from "../data/site";
+---
+
+<BaseLayout title="アクセス" description="みどり祭 2026 の会場、みどりの丘ひろばへの行き方です。">
+  <h1 class="text-2xl font-bold">アクセス</h1>
+  <p class="mt-4">{SITE.place}（{SITE.address}）</p>
+  <h2 class="mt-6 text-xl font-bold">電車で来る</h2>
+  <p class="mt-2">みどり駅の北口から歩いて10分です。</p>
+  <h2 class="mt-6 text-xl font-bold">車で来る</h2>
+  <p class="mt-2">駐車場はありません。電車かバスで来てください。</p>
+</BaseLayout>

@@ -1,0 +1,29 @@
+---
+import type { GetStaticPaths } from "astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { events } from "../../data/events";
+
+// events の数だけページを作る。params.id がファイル名の [id] に入る
+export const getStaticPaths = (() => {
+  return events.map((event) => ({
+    params: { id: event.id },
+    props: { event },
+  }));
+}) satisfies GetStaticPaths;
+
+const { event } = Astro.props;
+---
+
+<BaseLayout title={event.name} description={event.summary}>
+  <h1 class="text-2xl font-bold">{event.name}</h1>
+  <dl class="mt-4 grid grid-cols-[6em_1fr] gap-y-2">
+    <dt class="text-gray-500">団体</dt><dd>{event.group}</dd>
+    <dt class="text-gray-500">場所</dt><dd>{event.place}</dd>
+    <dt class="text-gray-500">時間</dt><dd>{event.time}</dd>
+  </dl>
+  <p class="mt-4">{event.summary}</p>
+  {event.id === "mogiten" && (
+    <p class="mt-4"><a href="/mogiten/" class="text-green-800 hover:underline">メニューを見る</a></p>
+  )}
+  <p class="mt-8"><a href="/events/" class="text-green-800 hover:underline">企画の一覧にもどる</a></p>
+</BaseLayout>

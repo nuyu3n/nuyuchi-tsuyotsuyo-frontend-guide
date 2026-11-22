@@ -1,0 +1,49 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { SITE } from "../data/site";
+
+type Props = {
+  title?: string; // ページの名前。省略するとサイト名だけ
+  description?: string;
+  image?: string; // OGP 画像のパス（/ogp.png など）
+};
+
+const { title, description = SITE.description, image = "/ogp.png" } = Astro.props;
+
+const pageTitle = title ? `${title} | ${SITE.name}` : SITE.name;
+// Astro.site は astro.config.mjs の site。canonical と OGP には「https:// から始まる」URL が要る
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL(image, Astro.site);
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content={title ? "article" : "website"} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-screen flex-col bg-white text-gray-800">
+    <Header />
+    <main class="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
